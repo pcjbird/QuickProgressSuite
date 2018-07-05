@@ -11,6 +11,7 @@
 @interface QuickProgressViewCircle()
 
 @property(nonatomic, strong) CAShapeLayer *emptyLineLayer;
+@property(nonatomic, strong) CAShapeLayer *emptyMaskLayer;
 @property(nonatomic, strong) CAShapeLayer *progressLayer;
 
 @end
@@ -21,7 +22,7 @@
 {
     if(self = [super initWithFrame:frame])
     {
-        
+        [self createSubLayers];
     }
     return self;
 }
@@ -30,9 +31,35 @@
 {
     if(self = [super initWithCoder:aDecoder])
     {
-        
+        [self createSubLayers];
     }
     return self;
+}
+
+-(void)layoutSublayersOfLayer:(CALayer *)layer
+{
+    [super layoutSublayersOfLayer:layer];
+    if(layer == self.emptyLineLayer)
+    {
+        _emptyLineLayer.frame = self.bounds;
+        _emptyMaskLayer.frame = self.bounds;
+        UIBezierPath *path = [self createProgressPath];
+        path.usesEvenOddFillRule = YES;
+        _emptyMaskLayer.path = path.CGPath;
+        _emptyLineLayer.path = [self createEmptyLinePath].CGPath;
+        _emptyLineLayer.mask = _emptyMaskLayer;
+    }
+    else if(layer == self.progressLayer)
+    {
+        _progressLayer.frame = self.bounds;
+        _progressLayer.path = [self createProgressPath].CGPath;
+    }
+}
+
+-(void) createSubLayers
+{
+    [self.layer addSublayer:[self emptyLineLayer]];
+    [self.layer addSublayer:[self progressLayer]];
 }
 
 -(CAShapeLayer*)emptyLineLayer
@@ -40,8 +67,23 @@
     if(![_emptyLineLayer isKindOfClass:[CAShapeLayer class]])
     {
         _emptyLineLayer = [CAShapeLayer layer];
+        _emptyLineLayer.path = [self createEmptyLinePath].CGPath;
+        _emptyLineLayer.mask = [self emptyMaskLayer];
     }
     return _emptyLineLayer;
+}
+
+-(CAShapeLayer*)emptyMaskLayer
+{
+    if(![_emptyMaskLayer isKindOfClass:[CAShapeLayer class]])
+    {
+        _emptyMaskLayer = [CAShapeLayer layer];
+        UIBezierPath *path = [self createProgressPath];
+        path.usesEvenOddFillRule = YES;
+        _emptyMaskLayer.path = path.CGPath;
+        _emptyMaskLayer.fillRule = kCAFillRuleEvenOdd;
+    }
+    return _emptyMaskLayer;
 }
 
 -(CAShapeLayer*)progressLayer
@@ -49,6 +91,7 @@
     if(![_progressLayer isKindOfClass:[CAShapeLayer class]])
     {
         _progressLayer = [CAShapeLayer layer];
+        _progressLayer.path = [self createProgressPath].CGPath;
     }
     return _progressLayer;
 }
