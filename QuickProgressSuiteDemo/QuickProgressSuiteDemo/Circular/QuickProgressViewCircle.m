@@ -179,7 +179,7 @@
                  center.x, center.y, radius,
                  startAngle,
                  //-(self.progressAngle/100.f)*M_PI-((-self.progressRotationAngle/100.f)*2.f+0.5)*M_PI,
-                 endAngle/*- (2.f*M_PI)*(self.progressAngle/100.f)**/,
+                  endAngle/*- (2.f*M_PI)*(self.progressAngle/100.f)**/,
                  YES);
     
     
@@ -227,13 +227,13 @@
     [super setProgress:progress animated:animated];
     
     /*CABasicAnimation *basicAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
-     basicAnimation.duration          = 0.5;
-     basicAnimation.fromValue         = (__bridge id)(self.lineShapeLayer.path);
-     basicAnimation.toValue           = (__bridge id)newPath.CGPath;
-     self.lineShapeLayer.path         = newPath.CGPath;
-     self.fillShapeLayer.path         = newPath.CGPath;
-     [self.lineShapeLayer addAnimation:basicAnimation forKey:@"lineShapeLayerPath"];
-     [self.fillShapeLayer addAnimation:basicAnimation forKey:@"fillShapeLayerPath"];*/
+    basicAnimation.duration          = 0.5;
+    basicAnimation.fromValue         = (__bridge id)(self.lineShapeLayer.path);
+    basicAnimation.toValue           = (__bridge id)newPath.CGPath;
+    self.lineShapeLayer.path         = newPath.CGPath;
+    self.fillShapeLayer.path         = newPath.CGPath;
+    [self.lineShapeLayer addAnimation:basicAnimation forKey:@"lineShapeLayerPath"];
+    [self.fillShapeLayer addAnimation:basicAnimation forKey:@"fillShapeLayerPath"];*/
     
     //[self.layer setNeedsLayout];
 }
