@@ -15,6 +15,7 @@
 		8942C67F20EF14C0008F87D8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8942C67E20EF14C0008F87D8 /* main.m */; };
 		8942C68B20EF158A008F87D8 /* QuickProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8942C68620EF158A008F87D8 /* QuickProgressView.m */; };
 		8942C68C20EF158A008F87D8 /* QuickProgressViewCircle.m in Sources */ = {isa = PBXBuildFile; fileRef = 8942C68A20EF158A008F87D8 /* QuickProgressViewCircle.m */; };
+		896451D020F09CB8002A6B07 /* QuickProgressViewDashBoard.m in Sources */ = {isa = PBXBuildFile; fileRef = 896451CF20F09CB7002A6B07 /* QuickProgressViewDashBoard.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,8 @@
 		8942C68720EF158A008F87D8 /* QuickProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuickProgressView.h; sourceTree = "<group>"; };
 		8942C68920EF158A008F87D8 /* QuickProgressViewCircle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuickProgressViewCircle.h; sourceTree = "<group>"; };
 		8942C68A20EF158A008F87D8 /* QuickProgressViewCircle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuickProgressViewCircle.m; sourceTree = "<group>"; };
+		896451CE20F09CB7002A6B07 /* QuickProgressViewDashBoard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuickProgressViewDashBoard.h; sourceTree = "<group>"; };
+		896451CF20F09CB7002A6B07 /* QuickProgressViewDashBoard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuickProgressViewDashBoard.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +67,7 @@
 		8942C66E20EF14BF008F87D8 /* QuickProgressSuiteDemo */ = {
 			isa = PBXGroup;
 			children = (
+				896451CD20F09CB7002A6B07 /* DashBoard */,
 				8942C68820EF158A008F87D8 /* Circular */,
 				8942C68520EF158A008F87D8 /* Core */,
 				8942C66F20EF14BF008F87D8 /* AppDelegate.h */,
@@ -95,6 +99,15 @@
 				8942C68A20EF158A008F87D8 /* QuickProgressViewCircle.m */,
 			);
 			path = Circular;
+			sourceTree = "<group>";
+		};
+		896451CD20F09CB7002A6B07 /* DashBoard */ = {
+			isa = PBXGroup;
+			children = (
+				896451CE20F09CB7002A6B07 /* QuickProgressViewDashBoard.h */,
+				896451CF20F09CB7002A6B07 /* QuickProgressViewDashBoard.m */,
+			);
+			path = DashBoard;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -167,6 +180,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				896451D020F09CB8002A6B07 /* QuickProgressViewDashBoard.m in Sources */,
 				8942C67420EF14BF008F87D8 /* ViewController.m in Sources */,
 				8942C67F20EF14C0008F87D8 /* main.m in Sources */,
 				8942C67120EF14BF008F87D8 /* AppDelegate.m in Sources */,

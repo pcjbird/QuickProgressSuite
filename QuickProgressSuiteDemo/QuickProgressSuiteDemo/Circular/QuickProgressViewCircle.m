@@ -102,10 +102,10 @@
     self.backgroundColor = [UIColor clearColor];
     
     //Without setting the content scale factor the layer would be pixelated
-    //[self setContentScaleFactor:[[UIScreen mainScreen] scale]];
+    [self setContentScaleFactor:[[UIScreen mainScreen] scale]];
     
     //This mode forces redrawing when bounds change (e.g. bounds change in animation)
-    //[self setContentMode:UIViewContentModeRedraw];
+    [self setContentMode:UIViewContentModeRedraw];
 }
 
 -(void) createSubLayers

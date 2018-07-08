@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		896451CB20F09C9A002A6B07 /* QuickProgressViewDashBoard.h in Headers */ = {isa = PBXBuildFile; fileRef = 896451C920F09C9A002A6B07 /* QuickProgressViewDashBoard.h */; };
+		896451CC20F09C9A002A6B07 /* QuickProgressViewDashBoard.m in Sources */ = {isa = PBXBuildFile; fileRef = 896451CA20F09C9A002A6B07 /* QuickProgressViewDashBoard.m */; };
 		896EDED620DB823E00D457CA /* QuickProgressSuite.h in Headers */ = {isa = PBXBuildFile; fileRef = 896EDED420DB823E00D457CA /* QuickProgressSuite.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		896EDEDF20DB840300D457CA /* QuickProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = 896EDEDD20DB840300D457CA /* QuickProgressView.h */; };
 		896EDEE020DB840300D457CA /* QuickProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 896EDEDE20DB840300D457CA /* QuickProgressView.m */; };
@@ -15,6 +17,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		896451C920F09C9A002A6B07 /* QuickProgressViewDashBoard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QuickProgressViewDashBoard.h; sourceTree = "<group>"; };
+		896451CA20F09C9A002A6B07 /* QuickProgressViewDashBoard.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QuickProgressViewDashBoard.m; sourceTree = "<group>"; };
 		896EDED120DB823E00D457CA /* QuickProgressSuite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = QuickProgressSuite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		896EDED420DB823E00D457CA /* QuickProgressSuite.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QuickProgressSuite.h; sourceTree = "<group>"; };
 		896EDED520DB823E00D457CA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -35,6 +39,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		896451C820F09C60002A6B07 /* DashBoard */ = {
+			isa = PBXGroup;
+			children = (
+				896451C920F09C9A002A6B07 /* QuickProgressViewDashBoard.h */,
+				896451CA20F09C9A002A6B07 /* QuickProgressViewDashBoard.m */,
+			);
+			path = DashBoard;
+			sourceTree = "<group>";
+		};
 		896EDEC720DB823E00D457CA = {
 			isa = PBXGroup;
 			children = (
@@ -57,6 +70,7 @@
 				896EDED420DB823E00D457CA /* QuickProgressSuite.h */,
 				896EDEDC20DB83E700D457CA /* Core */,
 				896EDEE120DB90B000D457CA /* Circular */,
+				896451C820F09C60002A6B07 /* DashBoard */,
 				896EDED520DB823E00D457CA /* Info.plist */,
 			);
 			path = QuickProgressSuite;
@@ -90,6 +104,7 @@
 				896EDEDF20DB840300D457CA /* QuickProgressView.h in Headers */,
 				896EDEE420DB916900D457CA /* QuickProgressViewCircle.h in Headers */,
 				896EDED620DB823E00D457CA /* QuickProgressSuite.h in Headers */,
+				896451CB20F09C9A002A6B07 /* QuickProgressViewDashBoard.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -160,6 +175,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				896451CC20F09C9A002A6B07 /* QuickProgressViewDashBoard.m in Sources */,
 				896EDEE020DB840300D457CA /* QuickProgressView.m in Sources */,
 				896EDEE520DB916900D457CA /* QuickProgressViewCircle.m in Sources */,
 			);
