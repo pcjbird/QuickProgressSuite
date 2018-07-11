@@ -83,15 +83,15 @@
 -(void) initVariables
 {
     _emptyLineWidth = 3;
-    
+    UISlider *slider;
     _progressLineWidth = 6;
     
     _progressRotationAngle = 0;
     _progressAngle = 100.0f;
     _progressColor = [UIColor colorWithWhite:1.0f alpha:0.5f];
-    _progressStrokeColor = [UIColor colorWithWhite:1.0f alpha:0.5f];
+    _progressStrokeColor = [UIColor colorWithWhite:1.0f alpha:0.0f];
     _emptyLineColor = [UIColor colorWithWhite:1.0f alpha:0.7f];
-    _emptyLineStrokeColor = [UIColor colorWithWhite:1.0f alpha:0.7f];
+    _emptyLineStrokeColor = [UIColor colorWithWhite:1.0f alpha:0.0f];
     _emptyCapType = kCGLineCapRound;
     _progressCapType = kCGLineCapRound;
 }
