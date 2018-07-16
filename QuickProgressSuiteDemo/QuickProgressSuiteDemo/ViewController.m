@@ -11,6 +11,7 @@
 
 @interface ViewController ()
 
+- (IBAction)OnClick:(id)sender;
 @property (weak, nonatomic) IBOutlet QuickProgressViewCircle *progressView;
 @end
 
@@ -19,7 +20,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    [self.progressView setProgress:0.9f animated:YES];
+    [self.progressView setProgress:0.9f animated:NO];
 }
 
 
@@ -29,4 +30,7 @@
 }
 
 
+- (IBAction)OnClick:(id)sender {
+    [self.progressView setProgress:(1.0f - self.progressView.progress) animated:YES];
+}
 @end
