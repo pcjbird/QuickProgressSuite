@@ -193,16 +193,16 @@
         
         if(animated)
         {
-            CABasicAnimation *maskAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
-            maskAnimation.duration          = 0.5;
+            CABasicAnimation *maskAnimation = [CABasicAnimation animationWithKeyPath:@"path1"];
+            maskAnimation.duration          = 2.5;
             maskAnimation.fromValue         = (__bridge id)(_emptyMaskLayer.path);
             maskAnimation.toValue           = (__bridge id)maskPath.CGPath;
             _emptyMaskLayer.path         = maskPath.CGPath;
             [self.emptyMaskLayer addAnimation:maskAnimation forKey:@"emptyMaskLayerPath"];
             
-            CABasicAnimation *basicAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
-            basicAnimation.duration          = 0.5;
-            basicAnimation.fromValue         = (__bridge id)(_emptyMaskLayer.path);
+            CABasicAnimation *basicAnimation = [CABasicAnimation animationWithKeyPath:@"path2"];
+            basicAnimation.duration          = 2.5;
+            basicAnimation.fromValue         = (__bridge id)(_emptyLayer.path);
             basicAnimation.toValue           = (__bridge id)path.CGPath;
             _emptyLayer.path         = path.CGPath;
             [self.emptyLayer addAnimation:basicAnimation forKey:@"emptyLayerPath"];
@@ -222,9 +222,9 @@
         
         if(animated)
         {
-            CABasicAnimation *basicAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
-            basicAnimation.duration          = 0.5;
-            basicAnimation.fromValue         = (__bridge id)(_emptyLayer.path);
+            CABasicAnimation *basicAnimation = [CABasicAnimation animationWithKeyPath:@"path3"];
+            basicAnimation.duration          = 2.5;
+            basicAnimation.fromValue         = (__bridge id)(_foreLayer.path);
             basicAnimation.toValue           = (__bridge id)path.CGPath;
             _foreLayer.path         = path.CGPath;
             [self.foreLayer addAnimation:basicAnimation forKey:@"foreLayerPath"];
