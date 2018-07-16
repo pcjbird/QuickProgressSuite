@@ -51,7 +51,7 @@
     return self;
 }
 
--(void)layoutSublayersOfLayer:(CALayer *)layer
+/*-(void)layoutSublayersOfLayer:(CALayer *)layer
 {
     [super layoutSublayersOfLayer:layer];
     if(_emptyLayer)
@@ -66,7 +66,7 @@
     {
         _foreLayer.frame = self.bounds;
     }
-}
+}*/
 
 -(void) initVariables
 {
@@ -75,7 +75,7 @@
     _rotation = 0.5;
     _partial = 1.0f;
     _color = [UIColor colorWithWhite:1.0f alpha:0.5f];
-    _strokeColor = [UIColor colorWithWhite:1.0f alpha:0.0f];
+    _strokeColor = [UIColor colorWithWhite:1.0f alpha:1.0f];
     _emptyColor = [UIColor colorWithWhite:1.0f alpha:0.7f];
     _emptyStrokeColor = [UIColor colorWithWhite:1.0f alpha:0.0f];
     _lineCap = QUICKPROGRESSCIRCLELINECAP_ROUND;
@@ -169,8 +169,7 @@
     CGPathAddArc(arc, NULL, center.x, center.y, radius, (self.partial)*M_PI-((-self.rotation)*2.f+0.5)*M_PI -(2.f*M_PI)*(_partial)*(100.f-100.f*self.progress)/100.f , -(self.partial)*M_PI-((-self.rotation)*2.f+0.5)*M_PI,
                  YES);
     
-    CGPathRef strokedArc =
-    CGPathCreateCopyByStrokingPath(arc, NULL, self.lineWidth, (CGLineCap)self.lineCap, kCGLineJoinMiter, 10);
+    CGPathRef strokedArc =CGPathCreateCopyByStrokingPath(arc, NULL, self.lineWidth, (CGLineCap)self.lineCap, kCGLineJoinMiter, 10);
     UIBezierPath * path = [UIBezierPath bezierPathWithCGPath:strokedArc];
     CGPathRelease(arc);
     CGPathRelease(strokedArc);
@@ -181,7 +180,7 @@
 -(void)setProgress:(CGFloat)progress animated:(BOOL)animated
 {
     [super setProgress:progress animated:animated];
-    
+   
     //emptylayer
     if(_emptyLayer)
     {
@@ -191,23 +190,23 @@
         
         UIBezierPath * path = [self createEmptyLayerPath];
         
-        if(animated)
+        /*if(animated)
         {
-            CABasicAnimation *maskAnimation = [CABasicAnimation animationWithKeyPath:@"path1"];
+            CABasicAnimation *maskAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
             maskAnimation.duration          = 2.5;
             maskAnimation.fromValue         = (__bridge id)(_emptyMaskLayer.path);
             maskAnimation.toValue           = (__bridge id)maskPath.CGPath;
             _emptyMaskLayer.path         = maskPath.CGPath;
             [self.emptyMaskLayer addAnimation:maskAnimation forKey:@"emptyMaskLayerPath"];
             
-            CABasicAnimation *basicAnimation = [CABasicAnimation animationWithKeyPath:@"path2"];
+            CABasicAnimation *basicAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
             basicAnimation.duration          = 2.5;
             basicAnimation.fromValue         = (__bridge id)(_emptyLayer.path);
             basicAnimation.toValue           = (__bridge id)path.CGPath;
             _emptyLayer.path         = path.CGPath;
             [self.emptyLayer addAnimation:basicAnimation forKey:@"emptyLayerPath"];
         }
-        else
+        else*/
         {
             _emptyMaskLayer.path = maskPath.CGPath;
             _emptyLayer.path = path.CGPath;
@@ -222,19 +221,21 @@
         
         if(animated)
         {
-            CABasicAnimation *basicAnimation = [CABasicAnimation animationWithKeyPath:@"path3"];
-            basicAnimation.duration          = 2.5;
-            basicAnimation.fromValue         = (__bridge id)(_foreLayer.path);
-            basicAnimation.toValue           = (__bridge id)path.CGPath;
             _foreLayer.path         = path.CGPath;
-            [self.foreLayer addAnimation:basicAnimation forKey:@"foreLayerPath"];
+            CABasicAnimation *basicAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+            basicAnimation.duration          = 10.0;
+            basicAnimation.fromValue = [NSNumber numberWithInteger:0];
+            basicAnimation.toValue = [NSNumber numberWithInteger:1];
+
+            //
+            [self.foreLayer addAnimation:basicAnimation forKey:@"strokeEnd"];
         }
         else
         {
             _foreLayer.path = path.CGPath;
         }
     }
-    [self.layer setNeedsLayout];
+    //[self.layer setNeedsLayout];
 }
 
 @end
