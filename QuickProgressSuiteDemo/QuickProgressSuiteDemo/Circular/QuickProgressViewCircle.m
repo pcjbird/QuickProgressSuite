@@ -13,7 +13,7 @@
 @property(nonatomic, strong) CAShapeLayer *emptyLayer;
 @property(nonatomic, strong) CAShapeLayer *emptyMaskLayer;
 @property(nonatomic, strong) CAShapeLayer *foreLayer;
-
+@property (nonatomic, assign) CGFloat lastProgress;
 @end
 
 @implementation QuickProgressViewCircle
@@ -80,6 +80,7 @@
     _emptyStrokeColor = [UIColor colorWithWhite:1.0f alpha:0.0f];
     _lineCap = QUICKPROGRESSCIRCLELINECAP_ROUND;
     [self setProgress:0.0f animated:NO];
+    self.lastProgress = self.progress;
 }
 
 -(void) initView
@@ -130,12 +131,26 @@
     if(![_foreLayer isKindOfClass:[CAShapeLayer class]])
     {
         _foreLayer = [CAShapeLayer layer];
-        _foreLayer.fillColor = self.color.CGColor;
-        _foreLayer.strokeColor = self.strokeColor.CGColor;
+        _foreLayer.fillColor = [UIColor clearColor].CGColor;
+        _foreLayer.strokeColor = self.color.CGColor;
+        _foreLayer.lineWidth = self.lineWidth;
         _foreLayer.frame = self.bounds;
-        _foreLayer.path = [self createForeLayerPath].CGPath;
+        //_foreLayer.path = [self createForeLayerPath].CGPath;
+        UIBezierPath *circlePath = [self getNewBezierPath];
+        _foreLayer.path = circlePath.CGPath;
+        _foreLayer.lineCap = @"round";
+        _foreLayer.strokeEnd = self.progress;
     }
     return _foreLayer;
+}
+
+//刷新最新路径
+- (UIBezierPath *)getNewBezierPath
+{
+    CGRect rect = self.bounds;
+    CGPoint center = {CGRectGetMidX(rect), CGRectGetMidY(rect)};
+    CGFloat radius = MIN(CGRectGetWidth(rect), CGRectGetHeight(rect))/2 - MAX(self.emptyLineWidth, self.lineWidth)/2.f;
+    return [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:-M_PI/2 endAngle:3*M_PI/2 clockwise:YES];
 }
 
 -(UIBezierPath *) createEmptyLayerPath
@@ -217,24 +232,28 @@
     if(_foreLayer)
     {
         
-        UIBezierPath * path = [self createForeLayerPath];
+        UIBezierPath * path = [self getNewBezierPath];
         
         if(animated)
         {
             _foreLayer.path         = path.CGPath;
             CABasicAnimation *basicAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-            basicAnimation.duration          = 10.0;
-            basicAnimation.fromValue = [NSNumber numberWithInteger:0];
-            basicAnimation.toValue = [NSNumber numberWithInteger:1];
-
+            basicAnimation.duration          = 1.0;
+            basicAnimation.fromValue = [NSNumber numberWithFloat:self.lastProgress];//
+            basicAnimation.toValue = [NSNumber numberWithFloat:progress];//
+            basicAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+            basicAnimation.fillMode = kCAFillModeForwards;
+            basicAnimation.removedOnCompletion = NO;
             //
             [self.foreLayer addAnimation:basicAnimation forKey:@"strokeEnd"];
         }
         else
         {
-            _foreLayer.path = path.CGPath;
+            _foreLayer.strokeEnd = self.progress;
+            //_foreLayer.path = path.CGPath;
         }
     }
+    self.lastProgress = progress;
     //[self.layer setNeedsLayout];
 }
 
