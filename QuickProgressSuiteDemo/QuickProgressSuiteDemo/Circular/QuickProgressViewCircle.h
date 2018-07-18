@@ -25,49 +25,40 @@ IB_DESIGNABLE
 @interface QuickProgressViewCircle : QuickProgressView
 
 /**
- * 旋转，默认起点是从正下方开始，顺时针 Progress bar rotation (Clockewise)    [0,1]
+ *  起点角度。角度从水平右侧开始为0，顺时针为增加角度。直接传度数 如-90.0
+ *  默认-90.0
  */
-@property (nonatomic,assign) IBInspectable CGFloat   rotation;
+@property (nonatomic, assign) IBInspectable CGFloat startAngle;
 
 /**
- *  进度条所占圆环的百分比，当==1时表示整个圆环都是用于进度，否则只是圆环的一部分用于显示进度条，其余部分为空白。 Set a partial for the progress bar    [0,1]
+ *  减少的角度 直接传度数 [0,360) 如30
+ *  默认0.0
  */
-@property (nonatomic,assign) IBInspectable CGFloat   partial;
+@property (nonatomic, assign) IBInspectable CGFloat reduceAngle;
 
 /**
- * @brief 进度条宽度 The width of the progress bar
+ * @brief 进度条宽度 The width of the progress bar [0,∞)
  */
-@property (nonatomic,assign) IBInspectable CGFloat   lineWidth;
+@property (nonatomic,assign) IBInspectable CGFloat progressWidth;
 
 /**
  * @brief 进度条前景色 The color of the progress bar
  */
-@property (nonatomic,strong) IBInspectable UIColor   *color;
+@property (nonatomic,strong) IBInspectable UIColor* progressColor;
+
 
 /**
- * @brief 进度条描边着色 The color of the progress bar frame
+ * The width of the background bar (user space units)    [0,∞)
  */
-@property (nonatomic,strong) IBInspectable UIColor   *strokeColor;
+@property (nonatomic,assign) IBInspectable CGFloat trackWidth;
+
+/**
+ * The color of the background bar
+ */
+@property (nonatomic,strong) IBInspectable UIColor* trackColor;
 
 /**
  * @brief 进度条线的顶点绘制类型 The shape of the progress bar cap
  */
 @property (nonatomic,assign) IBInspectable QUICKPROGRESSCIRCLELINECAP lineCap;
-
-/**
- * The width of the background bar (user space units)    [0,∞)
- */
-@property (nonatomic,assign) IBInspectable CGFloat   emptyLineWidth;
-
-/**
- * The color of the background bar
- */
-@property (nonatomic,strong) IBInspectable UIColor   *emptyColor;
-
-/**
- * The color of the background bar stroke color
- */
-@property (nonatomic,strong) IBInspectable UIColor   *emptyStrokeColor;
-
-
 @end

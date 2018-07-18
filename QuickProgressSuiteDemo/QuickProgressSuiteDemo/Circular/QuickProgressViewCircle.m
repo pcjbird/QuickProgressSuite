@@ -8,10 +8,12 @@
 
 #import "QuickProgressViewCircle.h"
 
+#define DegreeToRadian(d) (((d)*M_PI)/180.0)
+
 @interface QuickProgressViewCircle()
 
-@property(nonatomic, strong) CAShapeLayer *emptyLayer;
-@property(nonatomic, strong) CAShapeLayer *emptyMaskLayer;
+@property(nonatomic, strong) CAShapeLayer *trackLayer;
+@property(nonatomic, strong) CAShapeLayer *trackMaskLayer;
 @property(nonatomic, strong) CAShapeLayer *foreLayer;
 @property (nonatomic, assign) CGFloat lastProgress;
 @end
@@ -51,36 +53,30 @@
     return self;
 }
 
-/*-(void)layoutSublayersOfLayer:(CALayer *)layer
+-(void)layoutSublayersOfLayer:(CALayer *)layer
 {
     [super layoutSublayersOfLayer:layer];
-    if(_emptyLayer)
+    if([self.trackLayer isKindOfClass:[CAShapeLayer class]])
     {
-        _emptyLayer.frame = self.bounds;
+        self.trackLayer.frame = self.bounds;
     }
-    if(_emptyMaskLayer)
+    if([self.foreLayer isKindOfClass:[CAShapeLayer class]])
     {
-        _emptyMaskLayer.frame = self.bounds;
+        self.foreLayer.frame = self.bounds;
     }
-    if(_foreLayer)
-    {
-        _foreLayer.frame = self.bounds;
-    }
-}*/
+}
 
 -(void) initVariables
 {
-    _emptyLineWidth = 3;
-    _lineWidth = 6;
-    _rotation = 0.5;
-    _partial = 1.0f;
-    _color = [UIColor colorWithWhite:1.0f alpha:0.5f];
-    _strokeColor = [UIColor colorWithWhite:1.0f alpha:1.0f];
-    _emptyColor = [UIColor colorWithWhite:1.0f alpha:0.7f];
-    _emptyStrokeColor = [UIColor colorWithWhite:1.0f alpha:0.0f];
+    _trackWidth = 3.0f;
+    _progressWidth = 3.0f;
+    _startAngle = -90.0f;
+    _reduceAngle = 0.0f;
+    _progressColor = [UIColor colorWithWhite:1.0f alpha:0.5f];
+    _trackColor = [UIColor colorWithWhite:1.0f alpha:0.7f];
     _lineCap = QUICKPROGRESSCIRCLELINECAP_ROUND;
-    [self setProgress:0.0f animated:NO];
     self.lastProgress = self.progress;
+    [self setProgress:0.0f animated:NO];
 }
 
 -(void) initView
@@ -96,34 +92,85 @@
 
 -(void) createSubLayers
 {
-    [self.layer addSublayer:[self emptyLayer]];
+    [self.layer addSublayer:[self trackLayer]];
     [self.layer addSublayer:[self foreLayer]];
 }
 
--(CAShapeLayer*)emptyLayer
+-(void)setTrackWidth:(CGFloat)trackWidth
 {
-    if(![_emptyLayer isKindOfClass:[CAShapeLayer class]])
+    _trackWidth = trackWidth;
+    if([self.trackLayer isKindOfClass:[CAShapeLayer class]])
     {
-        _emptyLayer = [CAShapeLayer layer];
-        _emptyLayer.fillColor = self.emptyColor.CGColor;
-        _emptyMaskLayer.strokeColor = self.emptyStrokeColor.CGColor;
-        
-        _emptyLayer.frame = self.bounds;
-        _emptyMaskLayer = [CAShapeLayer layer];
-        _emptyMaskLayer.frame = self.bounds;
-        
-        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRect:self.bounds];
-        [maskPath appendPath:[self createForeLayerPath]];
-        maskPath.usesEvenOddFillRule = YES;
-        
-        _emptyMaskLayer.path = maskPath.CGPath;
-        _emptyMaskLayer.fillRule = kCAFillRuleEvenOdd;
-        
-        UIBezierPath * path = [self createEmptyLayerPath];
-        _emptyLayer.path = path.CGPath;
-        _emptyLayer.mask = _emptyMaskLayer;
+        self.trackLayer.lineWidth = trackWidth;
     }
-    return _emptyLayer;
+}
+
+-(void)setTrackColor:(UIColor *)trackColor
+{
+    if(![trackColor isKindOfClass:[UIColor class]]) trackColor = [UIColor clearColor];
+    _trackColor = trackColor;
+    if([self.trackLayer isKindOfClass:[CAShapeLayer class]])
+    {
+        self.trackLayer.strokeColor = trackColor.CGColor;
+    }
+}
+
+-(void)setProgressWidth:(CGFloat)progressWidth
+{
+    _progressWidth = progressWidth;
+    if([self.foreLayer isKindOfClass:[CAShapeLayer class]])
+    {
+        self.foreLayer.lineWidth = progressWidth;
+    }
+    if([self.trackMaskLayer isKindOfClass:[CAShapeLayer class]])
+    {
+        self.trackMaskLayer.lineWidth = progressWidth;
+    }
+}
+
+-(void)setProgressColor:(UIColor *)progressColor
+{
+    if(![progressColor isKindOfClass:[UIColor class]]) progressColor = [UIColor clearColor];
+    _progressColor = progressColor;
+    if([self.foreLayer isKindOfClass:[CAShapeLayer class]])
+    {
+        self.foreLayer.strokeColor = progressColor.CGColor;
+    }
+}
+
+-(CAShapeLayer*)trackLayer
+{
+    if(![_trackLayer isKindOfClass:[CAShapeLayer class]])
+    {
+        _trackLayer = [CAShapeLayer layer];
+        _trackLayer.fillColor = [UIColor clearColor].CGColor;
+        _trackLayer.strokeColor = self.trackColor.CGColor;
+        _trackLayer.lineWidth = self.trackWidth;
+        _trackLayer.lineCap = [self lineCapString];
+        _trackLayer.frame = self.bounds;
+        
+        UIBezierPath * path = [self getNewBezierPath];
+        _trackLayer.path = path.CGPath;
+        //_trackLayer.mask = self.trackMaskLayer;
+    }
+    return _trackLayer;
+}
+
+-(CAShapeLayer*)trackMaskLayer
+{
+    if(![_trackMaskLayer isKindOfClass:[CAShapeLayer class]])
+    {
+        _trackMaskLayer = [CAShapeLayer layer];
+        _trackMaskLayer.fillColor = [UIColor clearColor].CGColor;
+        _trackMaskLayer.strokeColor = self.progressColor.CGColor;
+        _trackMaskLayer.lineWidth = self.progressWidth;
+        _trackMaskLayer.frame = self.bounds;
+        UIBezierPath *circlePath = [self getNewBezierPath];
+        _trackMaskLayer.path = circlePath.CGPath;
+        _trackMaskLayer.lineCap = [self lineCapString];
+        _trackMaskLayer.strokeEnd = self.progress;
+    }
+    return _trackMaskLayer;
 }
 
 -(CAShapeLayer*)foreLayer
@@ -132,104 +179,87 @@
     {
         _foreLayer = [CAShapeLayer layer];
         _foreLayer.fillColor = [UIColor clearColor].CGColor;
-        _foreLayer.strokeColor = self.color.CGColor;
-        _foreLayer.lineWidth = self.lineWidth;
+        _foreLayer.strokeColor = self.progressColor.CGColor;
+        _foreLayer.lineWidth = self.progressWidth;
         _foreLayer.frame = self.bounds;
-        //_foreLayer.path = [self createForeLayerPath].CGPath;
         UIBezierPath *circlePath = [self getNewBezierPath];
         _foreLayer.path = circlePath.CGPath;
-        _foreLayer.lineCap = @"round";
+        _foreLayer.lineCap = [self lineCapString];
         _foreLayer.strokeEnd = self.progress;
     }
     return _foreLayer;
 }
 
-//刷新最新路径
+-(NSString *) lineCapString
+{
+    switch (self.lineCap) {
+        case QUICKPROGRESSCIRCLELINECAP_BUTT:
+        {
+            return @"butt";
+            break;
+        }
+        case QUICKPROGRESSCIRCLELINECAP_ROUND:
+        {
+            return @"round";
+            break;
+        }
+        case QUICKPROGRESSCIRCLELINECAP_SQUARE:
+        {
+            return @"square";
+            break;
+        }
+        default:
+            break;
+    }
+    return @"butt";
+}
+
 - (UIBezierPath *)getNewBezierPath
 {
     CGRect rect = self.bounds;
     CGPoint center = {CGRectGetMidX(rect), CGRectGetMidY(rect)};
-    CGFloat radius = MIN(CGRectGetWidth(rect), CGRectGetHeight(rect))/2 - MAX(self.emptyLineWidth, self.lineWidth)/2.f;
-    return [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:-M_PI/2 endAngle:3*M_PI/2 clockwise:YES];
-}
-
--(UIBezierPath *) createEmptyLayerPath
-{
-    
-    CGRect rect = self.bounds;
-    CGPoint center = {CGRectGetMidX(rect), CGRectGetMidY(rect)};
-    CGFloat radius = MIN(CGRectGetWidth(rect), CGRectGetHeight(rect))/2 - MAX(self.emptyLineWidth, self.lineWidth)/2.f;
-    
-    CGMutablePathRef arc = CGPathCreateMutable();
-    
-    CGFloat startAngle = 0;
-    CGFloat endAngle = 2*M_PI;
-    CGPathAddArc(arc, NULL, center.x, center.y, radius, startAngle, endAngle, YES);
-    
-    CGPathRef strokedArc = CGPathCreateCopyByStrokingPath(arc, NULL, self.emptyLineWidth, (CGLineCap)self.lineCap, kCGLineJoinMiter, 10);
-    UIBezierPath * path = [UIBezierPath bezierPathWithCGPath:strokedArc];
-    CGPathRelease(arc);
-    CGPathRelease(strokedArc);
-    
-    return path;
-}
-
--(UIBezierPath *) createForeLayerPath
-{
-    CGRect rect = self.bounds;
-    CGPoint center = {CGRectGetMidX(rect), CGRectGetMidY(rect)};
-    CGFloat radius = MIN(CGRectGetWidth(rect), CGRectGetHeight(rect))/2 - MAX(self.emptyLineWidth, self.lineWidth)/2.f;
-    
-    CGMutablePathRef arc = CGPathCreateMutable();
-    CGPathAddArc(arc, NULL, center.x, center.y, radius, (self.partial)*M_PI-((-self.rotation)*2.f+0.5)*M_PI -(2.f*M_PI)*(_partial)*(100.f-100.f*self.progress)/100.f , -(self.partial)*M_PI-((-self.rotation)*2.f+0.5)*M_PI,
-                 YES);
-    
-    CGPathRef strokedArc =CGPathCreateCopyByStrokingPath(arc, NULL, self.lineWidth, (CGLineCap)self.lineCap, kCGLineJoinMiter, 10);
-    UIBezierPath * path = [UIBezierPath bezierPathWithCGPath:strokedArc];
-    CGPathRelease(arc);
-    CGPathRelease(strokedArc);
-    
-    return path;
+    CGFloat radius = MIN(CGRectGetWidth(rect), CGRectGetHeight(rect))/2 - MAX(self.trackWidth, self.progressWidth)/2.f;
+    return [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:DegreeToRadian(self.startAngle) endAngle:DegreeToRadian(self.startAngle + 360.0f - self.reduceAngle) clockwise:YES];
 }
 
 -(void)setProgress:(CGFloat)progress animated:(BOOL)animated
 {
     [super setProgress:progress animated:animated];
    
-    //emptylayer
-    if(_emptyLayer)
+    //tracklayer
+    if([self.trackLayer isKindOfClass:[CAShapeLayer class]])
     {
-        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRect:self.bounds];
-        [maskPath appendPath:[self createForeLayerPath]];
-        maskPath.usesEvenOddFillRule = YES;
+        UIBezierPath * path = [self getNewBezierPath];
+        self.trackLayer.path = path.CGPath;
+    }
+    
+    //trackMasklayer
+    if([self.trackMaskLayer isKindOfClass:[CAShapeLayer class]])
+    {
         
-        UIBezierPath * path = [self createEmptyLayerPath];
+        UIBezierPath * path = [self getNewBezierPath];
         
-        /*if(animated)
+        if(animated)
         {
-            CABasicAnimation *maskAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
-            maskAnimation.duration          = 2.5;
-            maskAnimation.fromValue         = (__bridge id)(_emptyMaskLayer.path);
-            maskAnimation.toValue           = (__bridge id)maskPath.CGPath;
-            _emptyMaskLayer.path         = maskPath.CGPath;
-            [self.emptyMaskLayer addAnimation:maskAnimation forKey:@"emptyMaskLayerPath"];
-            
-            CABasicAnimation *basicAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
-            basicAnimation.duration          = 2.5;
-            basicAnimation.fromValue         = (__bridge id)(_emptyLayer.path);
-            basicAnimation.toValue           = (__bridge id)path.CGPath;
-            _emptyLayer.path         = path.CGPath;
-            [self.emptyLayer addAnimation:basicAnimation forKey:@"emptyLayerPath"];
+            _trackMaskLayer.path         = path.CGPath;
+            CABasicAnimation *basicAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+            basicAnimation.duration          = 1.0;
+            basicAnimation.fromValue = [NSNumber numberWithFloat:self.lastProgress];
+            basicAnimation.toValue = [NSNumber numberWithFloat:progress];//
+            basicAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+            basicAnimation.fillMode = kCAFillModeForwards;
+            basicAnimation.removedOnCompletion = NO;
+            [self.trackMaskLayer addAnimation:basicAnimation forKey:@"strokeEnd"];
         }
-        else*/
+        else
         {
-            _emptyMaskLayer.path = maskPath.CGPath;
-            _emptyLayer.path = path.CGPath;
+            _trackMaskLayer.path         = path.CGPath;
+            _trackMaskLayer.strokeEnd = self.progress;
         }
     }
     
     //forelayer
-    if(_foreLayer)
+    if([self.foreLayer isKindOfClass:[CAShapeLayer class]])
     {
         
         UIBezierPath * path = [self getNewBezierPath];
@@ -239,22 +269,21 @@
             _foreLayer.path         = path.CGPath;
             CABasicAnimation *basicAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
             basicAnimation.duration          = 1.0;
-            basicAnimation.fromValue = [NSNumber numberWithFloat:self.lastProgress];//
+            basicAnimation.fromValue = [NSNumber numberWithFloat:self.lastProgress];
             basicAnimation.toValue = [NSNumber numberWithFloat:progress];//
             basicAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
             basicAnimation.fillMode = kCAFillModeForwards;
             basicAnimation.removedOnCompletion = NO;
-            //
             [self.foreLayer addAnimation:basicAnimation forKey:@"strokeEnd"];
         }
         else
         {
+            _foreLayer.path         = path.CGPath;
             _foreLayer.strokeEnd = self.progress;
-            //_foreLayer.path = path.CGPath;
         }
     }
     self.lastProgress = progress;
-    //[self.layer setNeedsLayout];
+    [self.layer setNeedsLayout];
 }
 
 @end
