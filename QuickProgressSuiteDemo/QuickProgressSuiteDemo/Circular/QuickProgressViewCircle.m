@@ -151,7 +151,7 @@
         
         UIBezierPath * path = [self getNewBezierPath];
         _trackLayer.path = path.CGPath;
-        _trackLayer.mask = self.trackMaskLayer;
+        //_trackLayer.mask = self.trackMaskLayer;
     }
     return _trackLayer;
 }
